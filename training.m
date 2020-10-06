@@ -86,6 +86,7 @@ end
 clear 
 
 %% Initialisation
+addpath("NeuralNetwork")
 imDir = "TrainingData/TrainImages";
 pxDir = "TrainingData/TrainMasks";
 imds = imageDatastore(imDir,'ReadFcn',@importdata,'FileExtensions','.mat');
@@ -108,10 +109,9 @@ opts = trainingOptions('adam', ...
     'ResetInputNormalization', false, ...
     'Plots','training-progress', ...
     'VerboseFrequency',100);
-    %'CheckpointPath','Checkpoints', ...
-
+  
 [net,~] = trainNetwork(trainingData,layers,opts,nnGPU('Precision','half'));
-save('net.mat','net');
+save('NeuralNetwork\net2.mat','net');
 
 
 %% Testing
@@ -144,5 +144,9 @@ img(border) = 2;
 img(vacuoles) = 3;
 B = labeloverlay(pic,img); 
 imshow(B)  
+
+
+
+
 
 

@@ -2,7 +2,7 @@
 umperpix = 0.0782; % um per pixel. Change that to scale properly
 main_dir = "Batches\"; % Main folder
 % You can specify folders in "Batches" that will be analysed, 
-% otherwise, all are analysed
+% by adding them to "folders_user"
 folders_user = []; 
 if isempty(folders_user)
   files= dir(main_dir);
@@ -16,12 +16,17 @@ if isempty(folders_user)
 else
   folders = folders_user;
 end
+
 % Neural network preparation
-addpath("NeuralNetwork\")
-load("net.mat") 
+if exist('NeuralNetwork\net.mat','var')
+  load('NeuralNetwork\net.mat','net') 
+else
+  net = net_constructor();
+end
 layers = layerGraph(net);
 layers = removeLayers(layers,'regressionoutput');
 net = dlnetwork(layers);
+
 % Main loop
 for k = 1:length(folders)
   initial_dir = main_dir+folders(k);
