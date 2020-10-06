@@ -18,11 +18,7 @@ else
 end
 
 % Neural network preparation
-if exist('NeuralNetwork\net.mat','var')
-  load('NeuralNetwork\net.mat','net') 
-else
-  net = net_constructor();
-end
+load('NeuralNetwork\net.mat','net') 
 layers = layerGraph(net);
 layers = removeLayers(layers,'regressionoutput');
 net = dlnetwork(layers);
