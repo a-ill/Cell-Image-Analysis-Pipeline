@@ -1,5 +1,6 @@
 
 umperpix = 0.0782; % um per pixel. Change that to scale properly
+scale = 0.5; % downscale images if not enough GPU memory
 main_dir = "Batches\"; % Main folder
 % You can specify folders in "Batches" that will be analysed, 
 % by adding them to "folders_user"
@@ -51,7 +52,7 @@ for k = 1:length(folders)
     end
     for j = 1:length(subFolders2)
       dataDir = strcat(initial_dir,subFolders(i),subFolders2(j));
-      detection(dataDir,net,umperpix);  
+      detection(dataDir,net,umperpix,scale);  
     end
   end
 end

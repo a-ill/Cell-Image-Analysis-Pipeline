@@ -1,4 +1,4 @@
-function detection(dataDir,net,umperpix)
+function detection(dataDir,net,umperpix,scale)
 
 allowed_ext = [".bmp",".jpeg",".jpg",".png",".tif"];
 
@@ -20,22 +20,26 @@ end
 if con==1
   pics = cell(1,length(filenames));
   masks = cell(1,length(filenames));
+  fields = cell(1,length(filenames));
   % Import pictures
-  parfor i = 1:length(filenames) 
+  for i = 1:length(filenames) 
     pic = imread(strcat(dataDir,filenames(i))); 
     pic = im2single(rgb2gray(pic));
+    pic = imresize(pic,scale);
+    field = ~imdilate(imgaussfilt(single(pic<0.3),4)>0.5,ones(20));
+    fields{i} = ~bwareaopen(~field,30000);
     pic = rescale(pic,-1,1);
-    pic = imresize(pic,0.5);
     % Make size compatible with the neural network
     pic_size = size(pic);
     adj = (pic_size - floor(pic_size/16)*16)/2;
     pic = pic(1+adj(1):end-adj(1),1+adj(2):end-adj(2));
-    pics{i} = pic
+    pics{i} = pic;
   end
   % Detect features
   for i = 1:length(pics)
-    masks{i} = gather(extractdata(predict(net, ...
+    mask = gather(extractdata(predict(net, ...
       gpuArray(dlarray(pics{i},'SSCB'))))>0.5);
+    masks{i} = imresize(mask,1/scale);
   end
   % Save to temporary folder
   save(strcat(dataDir,'temp/masks.mat'),'masks');

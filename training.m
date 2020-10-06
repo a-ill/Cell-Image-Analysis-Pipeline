@@ -36,9 +36,12 @@ for i = 1:length(filenames)
   tempname = tempname(1:end-4);
   
   pic = im2single(rgb2gray(imread(dataDir+filenamesImg(i))));
+  field = ~imdilate(imgaussfilt(single(pic<0.3),4)>0.5,ones(20));
+  field = ~bwareaopen(~field,30000);
+  pic(~field) = 0;
   pic(isnan(pic)) = 0;
   pic = rescale(pic,-1,1);
-
+  
   [labelimg,~,tr] = imread(strcat(pxDir,'Images/',filenames(i)));
   labelimg(repmat(~tr,1,1,3)) = 0;
   label = zeros([size(labelimg(:,:,1)),3],'single');
@@ -46,8 +49,11 @@ for i = 1:length(filenames)
   border = imdilate(bwperim(label(:,:,1)),ones(3));
   border(label(:,:,1)==1) = 0;
   border = imdilate(border,ones(5));
-  label(:,:,2) = border;
+  label(:,:,2) = border & field;
   label(:,:,3) =  labelimg(:,:,1)==255;
+  for j=1:3
+    label(:,:,j) = label(:,:,j) & field;
+  end
   saveLabel(main_dir,tempname,label) 
 
   angles = 0:30:330; % angles for augmentation
