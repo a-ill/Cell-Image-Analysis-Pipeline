@@ -104,6 +104,7 @@ layers = layerGraph(net);
 
 %% Training
 
+% Options for training
 opts = trainingOptions('adam', ...
     'InitialLearnRate',1e-4, ...
     'LearnRateSchedule','piecewise', ...
@@ -117,7 +118,7 @@ opts = trainingOptions('adam', ...
     'VerboseFrequency',100);
   
 [net,~] = trainNetwork(trainingData,layers,opts,nnGPU('Precision','half'));
-save('NeuralNetwork\net2.mat','net');
+save('NeuralNetwork\net2.mat','net'); % saving neural network
 
 
 %% Testing

@@ -1,7 +1,7 @@
 
 umperpix = 0.0782; % um per pixel. Change that to scale properly
 scale = 0.5; % downscale images if not enough GPU memory
-main_dir = "Batches\"; % Main folder
+main_dir = "Batches\"; % Folder with images
 % You can specify folders in "Batches" that will be analysed, 
 % by adding them to "folders_user"
 folders_user = []; 
@@ -18,7 +18,7 @@ else
   folders = folders_user;
 end
 
-% Neural network preparation
+% Neural network import
 load('NeuralNetwork\net.mat','net') 
 layers = layerGraph(net);
 layers = removeLayers(layers,'regressionoutput');
@@ -26,6 +26,7 @@ net = dlnetwork(layers);
 
 % Main loop
 for k = 1:length(folders)
+  % Searches for images up to 2 folders deep
   initial_dir = main_dir+folders(k);
   files= dir(initial_dir);
   subFolders = files([files.isdir]);
