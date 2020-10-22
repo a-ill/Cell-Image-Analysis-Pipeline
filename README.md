@@ -11,4 +11,4 @@ Image processing, parallel processing and deep learning toolboxes are required. 
 3. Run "analysis2.m" to get cell and vacuole volume data.
 
 ### Cite this work
-doi:
+[https://doi.org/10.1101/2020.10.22.350355 ](https://www.biorxiv.org/content/10.1101/2020.10.22.350355v1)
